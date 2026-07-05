@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: php-app-deployment
+spec:
+  replicas: 2 
+  selector:
+    matchLabels:
+      app: php-cloud-native
+  template:
+    metadata:
+      labels:
+        app: php-cloud-native
+    spec:
+      containers:
+      - name: php-container
+        image: php-sleep:latest 
+        ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: php-app-service
+spec:
+  type: LoadBalancer 
+  ports:
+  - port: 7000
+    targetPort: 80
+  selector:
+    app: php-cloud-native # Fixed: This now perfectly matches the Deployment label
